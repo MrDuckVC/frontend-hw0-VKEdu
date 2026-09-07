@@ -78,4 +78,24 @@ QUnit.module("Тестируем функцию templateEngine", function() {
 
         assert.equal(result, "Значение:  и ");
     });
+
+    QUnit.test("Корректно обрабатывает falsy-значения, которые должны выводиться (0, false, пустая строка)", function(assert) {
+        const template = "Счет: {{score}}, Активен: {{isActive}}, Текст: {{text}}";
+        const data = { score: 0, isActive: false, text: "" };
+        const result = templateEngine(template, data);
+
+        assert.equal(result, "Счет: 0, Активен: false, Текст: ");
+    });
+
+    QUnit.test("Заменяет null и объекты на пустую строку", function(assert) {
+        const template = "Null: {{empty}}, Obj: {{obj}}, Arr: {{arr}}";
+        const data = { empty: null, obj: { a: 1 }, arr: [1, 2] };
+        const result = templateEngine(template, data);
+
+        assert.equal(result, "Null: , Obj: , Arr: ");
+    });
+
+    QUnit.test("Корректно работает с пустой строкой шаблона", function(assert) {
+        assert.equal(templateEngine("", { name: "Test" }), "");
+    });
 });

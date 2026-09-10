@@ -102,11 +102,9 @@ QUnit.module("Тестируем функцию templateEngine", function() {
     QUnit.test("Бросает ошибку, если в качестве data приходят объекты Date, Map или Set", function(assert) {
         const template = "Значение: {{a}}";
 
-        const checkError = (err) => err.message.includes("объект с переменными невалиден");
-
-        assert.throws(() => templateEngine(template, new Date()), checkError, "Бросает ошибку для Date");
-        assert.throws(() => templateEngine(template, new Map()), checkError, "Бросает ошибку для Map");
-        assert.throws(() => templateEngine(template, new Set()), checkError, "Бросает ошибку для Set");
+        assert.throws(() => templateEngine(template, new Date()), /объект с переменными невалиден/i, "Бросает ошибку для Date");
+        assert.throws(() => templateEngine(template, new Map()), /объект с переменными невалиден/i, "Бросает ошибку для Map");
+        assert.throws(() => templateEngine(template, new Set()), /объект с переменными невалиден/i, "Бросает ошибку для Set");
     });
 
     QUnit.test("Корректно работает со строками, созданными как объекты", function(assert) {

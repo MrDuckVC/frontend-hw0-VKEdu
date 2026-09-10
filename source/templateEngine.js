@@ -10,7 +10,7 @@ const TEMPLATE_VARIABLE_REGEX = /\{\{(.*?)\}\}/g;
 /**
  * Заменяет переменные в строке шаблона на значения из объекта данных.
  *
- * @param {string} template - Строка шаблона с переменными.
+ * @param {string|String} template - Строка шаблона с переменными (примитив или объект String).
  * @param {object} data - Объект с данными для подстановки.
  *
  * @description
@@ -19,10 +19,18 @@ const TEMPLATE_VARIABLE_REGEX = /\{\{(.*?)\}\}/g;
  * чтобы избежать вывода "[object Object]" или "null".
  * Логические значения (true/false) и числа (включая 0) приводятся к строке и сохраняются.
  *
+ * @throws {Error} Бросает ошибку, если data является экземпляром Date, Map или Set.
+ *
  * @returns {string} Результирующая строка. При некорректном шаблоне возвращает пустую строку.
  */
 const templateEngine = (template, data) => {
-    if (typeof template !== 'string') return '';
+    if (typeof template !== 'string' && !(template instanceof String)) {
+        return '';
+    }
+
+    if (data instanceof Date || data instanceof Map || data instanceof Set) {
+        throw new Error('templateEngine: объект с переменными невалиден');
+    }
 
     // Валидация объекта данных
     const isDataValid = typeof data === 'object' && data !== null && !Array.isArray(data);

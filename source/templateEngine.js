@@ -28,12 +28,12 @@ const templateEngine = (template, data) => {
         return '';
     }
 
-    if (data instanceof Date || data instanceof Map || data instanceof Set) {
-        throw new Error('templateEngine: объект с переменными невалиден');
-    }
-
     // Валидация объекта данных
     const isDataValid = typeof data === 'object' && data !== null && !Array.isArray(data);
+
+    if (isDataValid && Object.prototype.toString.call(data) !== '[object Object]') {
+        throw new Error('Объект с переменными невалиден');
+    }
 
     return template.replace(TEMPLATE_VARIABLE_REGEX, (match, path) => {
         if (!isDataValid) return '';
